@@ -1,0 +1,9 @@
+
+FROM postgres:latest
+
+
+ENV POSTGRES_USER=26thavenue
+ENV POSTGRES_PASSWORD=mypassword
+ENV POSTGRES_DB=TrackerDB
+
+EXPOSE 5432
