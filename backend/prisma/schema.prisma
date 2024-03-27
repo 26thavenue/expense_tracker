@@ -13,25 +13,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Month {
+  JANUARY
+  FEBRUARY
+  MARCH
+  APRIL
+  MAY
+  JUNE
+  JULY
+  AUGUST
+  SEPTEMBER
+  OCTOBER
+  NOVEMBER
+  DECEMBER
+}
+
 
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String?
-  password  String
+  hashedPassword  String
   todo      Todo[]
   income    Income[]
   expenses  Expenses[]
   savings   Savings[]
   journal   Journal[]
   projects  Projects[]
+  budget    Budget[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("users")
 }
 
 model Todo {
   id        String   @id @default(cuid())
   title     String
+  description String
   completed Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -48,8 +67,11 @@ model Income {
   amount    Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  month     Month
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+
+  @@map("incomes")
 }
 
 model Expenses{
@@ -58,8 +80,12 @@ model Expenses{
   amount    Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  month     Month
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+
+
+  @@map("expenses")
 }
 
 model Savings{
@@ -68,8 +94,12 @@ model Savings{
   amount    Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  month     Month
   userId    String
+  bankName  String
   user      User     @relation(fields: [userId], references: [id])
+
+  @@map("savings")
 }
 
 model Journal {
@@ -78,8 +108,11 @@ model Journal {
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  month     Month
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+
+  @@map("journals")
 }
 
 model Projects {
@@ -88,6 +121,22 @@ model Projects {
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  month     Month
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+
+  @@map("projects")
+}
+
+model Budget {
+  id        String   @id @default(cuid())
+  title     String
+  amount    Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  month     Month
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("budgets")
 }

@@ -9,14 +9,14 @@ export const getAllUserBudget = async(req: Request, res: Response) => {
         return res.json({message:'User not found'}).status(404)
     }
     try {
-        const expenses = await prisma.expenses.findMany(
+        const budgets = await prisma.budget.findMany(
             {
                 where: {
                     userId: userId
                 }
             }
         )
-        return res.json(expenses).status(200)
+        return res.json(budgets).status(200)
     } catch (error) {
         console.log(error);
     }
@@ -38,7 +38,7 @@ export const getUserBudgetByMonth = async(req: Request, res: Response) => {
         return res.json({message:'Month not found'}).status(404)
     }
     try {
-        const expenses = await prisma.expenses.findMany(
+        const budgets = await prisma.budget.findMany(
             {
                 where: {
                     userId: userId,
@@ -46,7 +46,7 @@ export const getUserBudgetByMonth = async(req: Request, res: Response) => {
                 }
             }
         )
-        return res.json(expenses).status(200)
+        return res.json(budgets).status(200)
     } catch (error) {
         console.log(error);
     }
@@ -56,12 +56,12 @@ export const getOneBudget= async(req: Request, res: Response) => {
     const {id} = req.params;
 
     try {
-        const expense = await prisma.expenses.findUnique({
+        const budget = await prisma.budget.findUnique({
             where: {id: id}
         })
-        return res.json(expense).status(200)
+        return res.json(budget).status(200)
     } catch (error) {
-        return res.json({message:'Expense not found'}).status(404)
+        return res.json({message:'Budget not found'}).status(404)
     }
 
 }
@@ -85,7 +85,7 @@ export const createBudget= async(req: Request, res: Response) => {
 
 
     try {
-        const expense = await prisma.expenses.create({
+        const budget = await prisma.budget.create({
             data: {
                 title,
                 amount,
@@ -93,10 +93,10 @@ export const createBudget= async(req: Request, res: Response) => {
                 userId
             }
         })
-        return res.json(expense).status(200)
+        return res.json(budget).status(200)
     } catch (error) {
         console.log(error)
-        return res.json({message:'Error creating Expense'}).status(500)
+        return res.json({message:'Error creating todo'}).status(500)
     }
 
 }
@@ -107,7 +107,7 @@ export const updateBudget = async(req: Request, res: Response) => {
     const {id} = req.params;
 
     if(!id){
-            return res.json({message:'Not found'}).status(404)
+            return res.json({message:'Todo not found'}).status(404)
     }
 
     const userId = req.user?.id
@@ -128,18 +128,18 @@ export const updateBudget = async(req: Request, res: Response) => {
 
 
     try {
-       const expense = await prisma.expenses.findUnique({
+       const budget = await prisma.budget.findUnique({
               where: {id:id}
         })
-        if(!expense){
-            return res.json({message:'Expense not found'}).status(404)
+        if(!budget){
+            return res.json({message:'Todo not found'}).status(404)
         }
-        if(expense.userId !== userId){
+        if(budget.userId !== userId){
             return res.json({message:'You are not authorized to do this'}).status(401)
         }
 
 
-        const updatedExpense = await prisma.expenses.update({
+        const updatedBudget = await prisma.budget.update({
             where: {id:id},
             data: {
                 title,
@@ -147,9 +147,9 @@ export const updateBudget = async(req: Request, res: Response) => {
                 month,
             }
         })
-        return res.json(updatedExpense).status(200)
+        return res.json(updatedBudget).status(200)
     } catch (error) {
-        return res.json({message:'An error occured'}).status(404)
+        return res.json({message:'Todo not found'}).status(404)
     }
 
 }
